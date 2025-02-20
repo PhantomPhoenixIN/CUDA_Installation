@@ -1,0 +1,48 @@
+[Step 1] Check the availability off Nvidia GPU: nvidia-smi
+
+[Step 2] Test for CUDA availability: nvcc --version
+
+If this is not available:
+1) CUDA is not installed, install from https://developer.nvidia.com/cuda-downloads?target_os=Windows&target_arch=x86_64&target_version=11&target_type=exe_local
+2) If already installed, set the environment path:
+
+Open Environment Variables
+
+Press Win + R, type sysdm.cpl, and press Enter.
+Go to the Advanced tab → Click Environment Variables.
+Edit Path Variable (Under "System Variables")
+
+Click Path → Edit → New
+Add these paths (adjust if needed):
+
+C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.5\bin
+C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.5\libnvvp
+
+[Step 3] Restart the system and run nvcc --version
+
+You should now see CUDA version details.
+
+[Step 4] Verify CUDA in PyTorch
+
+After fixing nvcc, check PyTorch again. Run the below python snippet:
+
+import torch
+print(torch.cuda.is_available())  # Should return True
+print(torch.cuda.get_device_name(0))  # Should return "GTX 1650"
+
+If its "True" CUDA is successfully installed, else follow step 5.
+
+[Step 5] If it’s still False, reinstall PyTorch with CUDA:
+
+Uninstall Current Version: pip uninstall torch torchvision torchaudio -y
+
+If you have CUDA 12.8, install PyTorch with CUDA 12.1 (closest stable version): pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
+After installation, restart your system and rerun: 
+
+import torch
+print(torch.cuda.is_available())  
+print(torch.cuda.get_device_name(0) if torch.cuda.is_available() else "No GPU found")
+
+
+
